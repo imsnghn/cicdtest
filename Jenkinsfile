@@ -9,17 +9,16 @@ pipeline {
     stage('docker build and push') {
       steps {
         sh '''
-        docker build -t imsnghyun/cicdtest:blue .
-        docker push imsnghyun/cicdtest:blue
+        sudo docker build -t imsnghyun/cicdtest:blue .
+        sudo docker push imsnghyun/cicdtest:blue
         ''' 
       }
     }
-    stage('deploy kubernetes') {
+    stage('deploy and service') {
       steps {
         sh '''
-        kubectl create deploy myweb1 --image=imsnghyun/cicdtest:blue
-        kubectl expose deploy myweb1 --type="LoadBalancer" --port=80 --target-port=80 --protocol="TCP"
-        
+        ansible master -m command -a 'kubectl create deploy web-green --replicas=3 --image=imsnghyun/cicdtest:blue'
+        ansible master -m command -a 'kubectl expose deploy web-green --type=LoadBalancer --port=80 --target-port=80 --name=web-green-svc'
         '''
       }
     }
