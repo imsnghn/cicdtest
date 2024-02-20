@@ -1,7 +1,7 @@
 pipeline {
   agent any
   stages {
-    stages('git scm update') {
+    stage('git scm update') {
       steps {
         git url: 'https://github.com/imsnghn/cicdtest.git', branch: 'main'
       }
