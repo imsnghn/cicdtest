@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myweb1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myweb1
+  template:
+    metadata:
+      labels:
+        app: myweb1
+    spec:
+      containers:
+      - name: myweb1
+        image: commit07/cicdtest:green
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myweb1
+spec:
+  type: LoadBalancer
+  selector:
+    app: myweb1
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
